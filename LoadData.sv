@@ -1,3 +1,19 @@
+/******************************************************************* 
+* Name:
+*	LoadData.sv
+* Description:
+* 	This module realize the load of the registers and turn 
+* Inputs:
+*	clk,reset,Start,Data,Load,Ready
+* Outputs:
+* 	Load_x,Load_y,flagStart,DataX,DataY
+* Versión:  
+*	1.0
+* Author: 
+*	Felipe Garcia & Diego Reyna
+* Fecha: 
+*	18/03/2018 
+*********************************************************************/
 module LoadData
 #(
 	parameter WORD_LENGTH = 16
