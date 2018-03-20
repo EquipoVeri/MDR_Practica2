@@ -28,9 +28,6 @@ module P2_TopLevel
 	output Sign,
 	output Ready,
 	output Error,
-	
-	//output Error,
-	/* Result*/
 	output [6:0] units,
 	output [6:0] hundreds,
 	output [6:0] tens,
@@ -39,7 +36,7 @@ module P2_TopLevel
 	output [WORD_LENGTH-1:0] Remainder
 );
 
-bit Sign_b, LoadX_b, LoadY_b, Ready_b;
+bit Sign_b, LoadX_b, LoadY_b, Ready_b, Error_b;
 wire [WORD_LENGTH-1:0] Result_w;
 wire [WORD_LENGTH-1:0] Remainder_w;
 
@@ -47,7 +44,7 @@ assign Remainder = Remainder_w;
 assign Sign = ~Sign_b;
 assign LoadX = LoadX_b;
 assign LoadY = LoadY_b;
-assign Ready = Ready_b;
+assign Ready = ~Ready_b;
 assign Error = Error_b;
 
 P2

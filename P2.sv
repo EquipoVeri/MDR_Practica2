@@ -29,6 +29,7 @@ bit enable_bit;
 bit enableReg_bit;
 bit sign_bit;
 bit flush_bit;
+bit ready_out_bit;
 
 wire [WORD_LENGTH-1:0] dataX_w;
 wire [WORD_LENGTH-1:0] dataY_w;
@@ -41,7 +42,7 @@ assign loadY = loadY_bit;
 assign result = result_w;
 assign remainder = remainder_w;
 assign sign = sign_bit;
-assign ready = ready_bit;
+assign ready = ready_out_bit;
 assign error = error_bit;
 
 LoadData
@@ -60,6 +61,7 @@ load_data
 	.Load_y(loadY_bit),
 	.flagStart(enable_bit),
 	.flagFlush(flush_bit),
+	.ready_out(ready_out_bit),
 	.DataX(dataX_w),
 	.DataY(dataY_w)
 );

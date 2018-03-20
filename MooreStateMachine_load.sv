@@ -13,7 +13,8 @@ module MooreStateMachine_load
 	output Enable1,
 	output Enable2,
 	output flagStart,
-	output flush
+	output flush,
+	output ready_out
 );
 
 enum logic [3:0] {IDLE, START1, START0, LOAD_CH1, CH1_LOADED, LOAD_CH2, CH2_LOADED} state; 
@@ -24,6 +25,7 @@ bit enable1_b; /* This is the bit to charge the channel 1*/
 bit enable2_b; /* This is the bit to charge the channel 2*/
 bit start_b; /* This is the bit to start the MDR */
 bit flush_b;
+bit ready_bit;
 
 /*------------------------------------------------------------------------------------------*/
 /*Asignacion de estado, proceso secuencial*/
@@ -95,6 +97,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b0;
 			end	
 		START1: 
 			begin
@@ -104,6 +107,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b0;
 			end	
 		START0: 
 			begin
@@ -113,6 +117,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b1;
 			end	
 		LOAD_CH1: 
 			begin
@@ -122,6 +127,7 @@ always_comb begin
 				enable1_b = 1'b1;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b1;
 			end
 		CH1_LOADED: 
 			begin
@@ -131,6 +137,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b1;
 			end
 		LOAD_CH2:
 			begin
@@ -140,6 +147,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b1;
 			end
 			
 		CH2_LOADED:
@@ -150,6 +158,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b1;
 				flush_b = 1'b0;
+				ready_bit = 1'b1;
 			end
 			
 		default: 		
@@ -160,6 +169,7 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 				flush_b = 1'b1;
+				ready_bit = 1'b1;
 			end
 
 	endcase
@@ -173,6 +183,7 @@ assign Enable1 = enable1_b;
 assign Enable2 = enable2_b;
 assign flagStart = start_b;
 assign flush = flush_b;
+assign ready_out = ready_bit;
 
 
 endmodule 
