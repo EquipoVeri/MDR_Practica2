@@ -87,6 +87,7 @@ div
 	.clk(clk),
 	.reset(reset),
 	.enable(start & op[0] & ~op[1]),
+	.flush(flush),
 	.dividend(dataX),
 	.divisor(dataY),
 	.partial_in(adder_out_w),

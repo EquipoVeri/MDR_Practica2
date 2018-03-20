@@ -7,6 +7,7 @@ module Divider
 	input clk,
 	input reset,
 	input enable,
+	input flush,
 	input [WORD_LENGTH-1:0] dividend,
 	input [WORD_LENGTH-1:0] divisor,
 	input [(WORD_LENGTH*2)-1:0] partial_in,
@@ -31,6 +32,8 @@ wire [WORD_LENGTH-1:0] signed_divisor_w;
 wire [WORD_LENGTH-1:0] signed_dividend_w;
 bit sign_divisor_bit;
 bit sign_dividend_bit;
+bit sign_bit;
+bit sign_final_bit;
 bit ready_bit;
 wire [WORD_LENGTH-1:0] Qshift_w;
 wire [WORD_LENGTH-1:0] Qreg_w;
@@ -44,8 +47,9 @@ assign result = result_w;
 assign remainder = remainder_w[WORD_LENGTH-1:0];
 
 assign ready = enable_w;
+assign sign = sign_final_bit;
 
-CounterWithFunction 
+CounterWithFunction_flush
 #(
 	.MAXIMUM_VALUE(WORD_LENGTH+1)
 )
@@ -55,6 +59,7 @@ counter_divider
 	.clk(clk),
 	.reset(reset),
 	.enable(enable),
+	.flush(flush),
 	.flag0(flag0_w),
 	.flag32(enable_w) 
 );
@@ -90,7 +95,7 @@ Sign sign_divider
 	.enable(enable),
 	.multiplicand(sign_dividend_bit),
 	.multiplier(sign_divisor_bit),
-	.sign(sign)
+	.sign(sign_bit)
 );
 
 
@@ -247,4 +252,17 @@ reg_finalQ
 	.Data_Output(result_w)
 );
 
+Register
+#(
+	.Word_Length(1)
+)
+reg_finalsign
+(
+	// Input Ports
+	.clk(clk),
+	.reset(reset),
+	.enable(enable_w),
+	.Data_Input(sign_bit),
+	.Data_Output(sign_final_bit)
+);
 endmodule
