@@ -23,21 +23,18 @@ module P2
 bit ready_bit;
 bit loadX_bit;
 bit loadY_bit;
-
 bit enable_bit;
+bit enableReg_bit;
+bit sign_bit;
+bit flush_bit;
 
 wire [WORD_LENGTH-1:0] dataX_w;
 wire [WORD_LENGTH-1:0] dataY_w;
-
 wire [WORD_LENGTH-1:0] result_w;
 wire [WORD_LENGTH-1:0] remainder_w;
 
-bit sign_bit;
-
-
 assign loadX = loadX_bit;
 assign loadY = loadY_bit;
-
 assign result = result_w;
 assign remainder = remainder_w;
 assign sign = sign_bit;
@@ -58,6 +55,7 @@ load_data
 	.Load_x(loadX_bit),
 	.Load_y(loadY_bit),
 	.flagStart(enable_bit),
+	.flagFlush(flush_bit),
 	.DataX(dataX_w),
 	.DataY(dataY_w)
 );
@@ -74,6 +72,7 @@ MDR_module
 	.dataY(dataY_w),
 	.op(op),
 	.start(enable_bit),
+	.flush(flush_bit),
 	.ready(ready_bit),
 	.result(result_w),
 	.remainder(remainder_w),
@@ -81,4 +80,4 @@ MDR_module
 );
 
 
-endmodule
+endmodule 

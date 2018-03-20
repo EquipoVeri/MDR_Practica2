@@ -22,6 +22,7 @@ module Multiplier
 	input clk,
 	input reset,
 	input enable,
+	input flush,
 	input [WORD_LENGTH-1 : 0] Multiplier,
 	input [WORD_LENGTH-1 : 0] Multiplicand,
 	input [WORD_LENGTH-1 : 0] partial_in,
@@ -184,7 +185,7 @@ Result_reg
 	.Data_Output(Result_w)
 );
 
-CounterWithFunction
+CounterWithFunction_flush
 #(
 	.MAXIMUM_VALUE(WORD_LENGTH)
 )
@@ -193,6 +194,7 @@ counter_mult
 	.clk(clk),
 	.reset(reset),
 	.enable(enable),
+	.flush(flush),
 	.flag0(flag0_bit),
 	.flag32(enable_bit) 
 );

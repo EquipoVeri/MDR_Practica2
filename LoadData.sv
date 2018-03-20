@@ -31,6 +31,7 @@ module LoadData
 	output Load_x,
 	output Load_y,
 	output flagStart,
+	output flagFlush,
 	output [WORD_LENGTH-1:0] DataX,
 	output [WORD_LENGTH-1:0] DataY
 );
@@ -42,6 +43,7 @@ bit enable_bit;
 bit enableX_flag; /* This is the bit to charge the channel 1*/
 bit enableY_flag; /* This is the bit to charge the channel 2*/
 bit start_flag; /* This is the bit to start the MDR */
+bit flush_flag;
 
 wire [WORD_LENGTH-1:0] DataX_w;
 wire [WORD_LENGTH-1:0] DataY_w;
@@ -57,7 +59,8 @@ MooreStateMachine_load Load_SM
 	.Load_ch2(LoadY_b),
 	.Enable1(enableX_flag),
 	.Enable2(enableY_flag),
-	.flagStart(start_flag)
+	.flagStart(start_flag),
+	.flush(flush_flag)
 );
 
 Register
@@ -104,5 +107,6 @@ assign Load_y = LoadY_b;
 assign flagStart = enable_bit;
 assign DataX = DataX_w;
 assign DataY = DataY_w;
+assign flagFlush = flush_flag;
 
 endmodule 

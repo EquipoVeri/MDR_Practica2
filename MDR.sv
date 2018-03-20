@@ -10,6 +10,7 @@ module MDR
 	input [WORD_LENGTH-1:0] dataY,
 	input [1:0] op,
 	input start,
+	input flush,
 	
 	//output ports
 	output ready,
@@ -107,6 +108,7 @@ mult
 	.clk(clk),
 	.reset(reset),
 	.enable(start& ~op[0] & ~op[1]),
+	.flush(flush),
 	.Multiplier(dataY),
 	.Multiplicand(dataX),
 	.partial_in(adder_out_w[WORD_LENGTH-1:0]),

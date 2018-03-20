@@ -12,16 +12,18 @@ module MooreStateMachine_load
 	output Load_ch2,
 	output Enable1,
 	output Enable2,
-	output flagStart
+	output flagStart,
+	output flush
 );
 
-enum logic [2:0] {IDLE, START1, START0, LOAD_CH1, CH1_LOADED, LOAD_CH2, CH2_LOADED} state; 
+enum logic [3:0] {IDLE, START1, START0, LOAD_CH1, CH1_LOADED, LOAD_CH2, CH2_LOADED} state; 
 
 bit load1_b; /* This is the bit of the led 1*/
 bit load2_b; /* This is the bit of the led 2*/
 bit enable1_b; /* This is the bit to charge the channel 1*/
 bit enable2_b; /* This is the bit to charge the channel 2*/
 bit start_b; /* This is the bit to start the MDR */
+bit flush_b;
 
 /*------------------------------------------------------------------------------------------*/
 /*Asignacion de estado, proceso secuencial*/
@@ -29,55 +31,56 @@ always_ff@(posedge clk, negedge reset) begin
 
 	if(reset == 1'b0)
 			state <= IDLE;
-	else 
-	case(state)
-		
-		IDLE:
-			if(Start)
-				state <= START1;
-			else
-				state <= IDLE;	
-				
-		START1:
-			if(Start == 0)
-				state <= START0;
-			else
-				state <= START1;
-	
-		START0:
-			if(Load)
-				state <= LOAD_CH1;
-			else
-				state <= START0;
+	else
+		case(state)
+			
+			IDLE:
+				if(Start)
+					state <= START1;
+				else
+					state <= IDLE;	
 					
-		LOAD_CH1:
-			if(Load == 0)
-				state <= CH1_LOADED;
-			else
-				state <= LOAD_CH1;
-
-		CH1_LOADED:
-			if(Load)
-				state <= LOAD_CH2;
-			else
-				state <= CH1_LOADED;
+			START1:
+				if(Start == 0)
+					state <= START0;
+				else
+					state <= START1;
 		
-		LOAD_CH2:
-			if(Load == 0)
-				state <= CH2_LOADED;
-			else
-				state <= LOAD_CH2;
-	
-		CH2_LOADED:
-			if(Ready)
-				state <= IDLE;
-			else
-				state <= CH2_LOADED;
-				
-		default:
-				state <= IDLE;
+			START0:
+				if(Load)
+					state <= LOAD_CH1;
+				else
+					state <= START0;
+						
+			LOAD_CH1:
+				if(Load == 0)
+					state <= CH1_LOADED;
+				else
+					state <= LOAD_CH1;
 
-		endcase
+			CH1_LOADED:
+				if(Load)
+					state <= LOAD_CH2;
+				else
+					state <= CH1_LOADED;
+			
+			LOAD_CH2:
+				if(Load == 0)
+					state <= CH2_LOADED;
+				else
+					state <= LOAD_CH2;
+		
+			CH2_LOADED:
+				if(Ready)
+					state <= IDLE;
+				else
+					state <= CH2_LOADED;
+					
+			default:
+					state <= IDLE;
+
+			endcase
+			
 end//end always
 
 /*------------------------------------------------------------------------------------------*/
@@ -91,6 +94,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end	
 		START1: 
 			begin
@@ -99,6 +103,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end	
 		START0: 
 			begin
@@ -107,6 +112,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end	
 		LOAD_CH1: 
 			begin
@@ -115,6 +121,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b1;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end
 		CH1_LOADED: 
 			begin
@@ -123,6 +130,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end
 		LOAD_CH2:
 			begin
@@ -131,6 +139,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end
 			
 		CH2_LOADED:
@@ -140,6 +149,7 @@ always_comb begin
 				start_b = 1'b1;
 				enable1_b = 1'b0;
 				enable2_b = 1'b1;
+				flush_b = 1'b0;
 			end
 			
 		default: 		
@@ -149,6 +159,7 @@ always_comb begin
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
+				flush_b = 1'b1;
 			end
 
 	endcase
@@ -161,6 +172,7 @@ assign Load_ch2 = load2_b;
 assign Enable1 = enable1_b;
 assign Enable2 = enable2_b;
 assign flagStart = start_b;
+assign flush = flush_b;
 
 
 endmodule 

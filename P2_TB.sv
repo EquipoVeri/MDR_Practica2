@@ -56,7 +56,7 @@ initial begin
 	#0 start = 0;
 	#1 start = 1;
 	#20 start = 0;
-	#0 op = 2'b10;
+	#0 op = 2'b00;
 	#0 data = 2;
 	#20 load = 1;
 	#20 load = 0;
@@ -69,7 +69,7 @@ initial begin
 	#0 start = 0;
 	#1 start = 1;
 	#20 start = 0;
-	#0 op = 2'b10;
+	#0 op = 2'b00;
 	#0 data = 300;
 	#20 load = 1;
 	#20 load = 0;
@@ -82,7 +82,7 @@ initial begin
 	#0 start = 0;
 	#1 start = 1;
 	#20 start = 0;
-	#0 op = 2'b10;
+	#0 op = 2'b00;
 	#0 data = 2132;
 	#20 load = 1;
 	#20 load = 0;
