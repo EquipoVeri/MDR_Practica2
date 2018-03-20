@@ -38,6 +38,7 @@ module LoadData
 //bit ready_flag;
 bit LoadX_b;
 bit LoadY_b;
+bit enable_bit;
 bit enableX_flag; /* This is the bit to charge the channel 1*/
 bit enableY_flag; /* This is the bit to charge the channel 2*/
 bit start_flag; /* This is the bit to start the MDR */
@@ -74,6 +75,19 @@ X_reg
 
 Register
 #(
+	.Word_Length(1)
+)
+enable_reg
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1'b1),
+	.Data_Input(start_flag),
+	.Data_Output(enable_bit)
+);
+
+Register
+#(
 	.Word_Length(WORD_LENGTH)
 )
 Y_reg
@@ -87,7 +101,7 @@ Y_reg
 
 assign Load_x = LoadX_b;
 assign Load_y = LoadY_b;
-assign flagStart = start_flag;
+assign flagStart = enable_bit;
 assign DataX = DataX_w;
 assign DataY = DataY_w;
 

@@ -1,20 +1,4 @@
-/******************************************************************* 
-* Name:
-*	Register.sv
-* Description:
-* 	This module is a register
-* Inputs:
-*	clk, reset, enable, Data_Input
-* Outputs:
-* 	Data_Output
-* Versión:  
-*	1.0
-* Author: 
-*	Felipe Garcia & Diego Reyna
-* Fecha: 
-*	21/02/2018 
-*********************************************************************/
-module Register
+ module Register
 #(
 	parameter Word_Length = 16
 )
@@ -42,4 +26,4 @@ end: ThisIsARegister
 
 assign Data_Output = Data_logic;
 
-endmodule 
+endmodule

@@ -15,7 +15,7 @@ module MooreStateMachine_load
 	output flagStart
 );
 
-enum logic [2:0] {IDLE,LOAD_CH1,LOAD_CH2,FINISH} state; 
+enum logic [2:0] {IDLE, START1, START0, LOAD_CH1, CH1_LOADED, LOAD_CH2, CH2_LOADED} state; 
 
 bit load1_b; /* This is the bit of the led 1*/
 bit load2_b; /* This is the bit of the led 2*/
@@ -34,27 +34,45 @@ always_ff@(posedge clk, negedge reset) begin
 		
 		IDLE:
 			if(Start)
-				state <= LOAD_CH1;
+				state <= START1;
 			else
 				state <= IDLE;	
 				
+		START1:
+			if(Start == 0)
+				state <= START0;
+			else
+				state <= START1;
+	
+		START0:
+			if(Load)
+				state <= LOAD_CH1;
+			else
+				state <= START0;
+					
 		LOAD_CH1:
+			if(Load == 0)
+				state <= CH1_LOADED;
+			else
+				state <= LOAD_CH1;
+
+		CH1_LOADED:
 			if(Load)
 				state <= LOAD_CH2;
 			else
-				state <= LOAD_CH1;
-				
+				state <= CH1_LOADED;
+		
 		LOAD_CH2:
-			if(Load)
-				state <= FINISH;
+			if(Load == 0)
+				state <= CH2_LOADED;
 			else
-				state <= LOAD_CH2;	
-				
-		FINISH:
+				state <= LOAD_CH2;
+	
+		CH2_LOADED:
 			if(Ready)
 				state <= IDLE;
 			else
-				state <= FINISH;	
+				state <= CH2_LOADED;
 				
 		default:
 				state <= IDLE;
@@ -74,10 +92,34 @@ always_comb begin
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 			end	
-		LOAD_CH1: 
+		START1: 
+			begin
+				load1_b = 1'b0;
+				load2_b = 1'b0;
+				start_b = 1'b0;
+				enable1_b = 1'b0;
+				enable2_b = 1'b0;
+			end	
+		START0: 
 			begin
 				load1_b = 1'b1;
 				load2_b = 1'b0;
+				start_b = 1'b0;
+				enable1_b = 1'b0;
+				enable2_b = 1'b0;
+			end	
+		LOAD_CH1: 
+			begin
+				load1_b = 1'b0;
+				load2_b = 1'b0;
+				start_b = 1'b0;
+				enable1_b = 1'b1;
+				enable2_b = 1'b0;
+			end
+		CH1_LOADED: 
+			begin
+				load1_b = 1'b0;
+				load2_b = 1'b1;
 				start_b = 1'b0;
 				enable1_b = 1'b0;
 				enable2_b = 1'b0;
@@ -85,12 +127,13 @@ always_comb begin
 		LOAD_CH2:
 			begin
 				load1_b = 1'b0;
-				load2_b = 1'b1;
+				load2_b = 1'b0;
 				start_b = 1'b0;
-				enable1_b = 1'b1;
+				enable1_b = 1'b0;
 				enable2_b = 1'b0;
 			end
-		FINISH:
+			
+		CH2_LOADED:
 			begin
 				load1_b = 1'b0;
 				load2_b = 1'b0;
