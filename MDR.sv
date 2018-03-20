@@ -15,6 +15,7 @@ module MDR
 	//output ports
 	output ready,
 	output [WORD_LENGTH-1:0] result,
+	output [(WORD_LENGTH*2)-1 : 0] result32,
 	output [WORD_LENGTH-1:0] remainder,
 	output sign
 );
@@ -42,6 +43,7 @@ wire [(WORD_LENGTH*2)-1:0] partial2_out_div_w;
 wire [WORD_LENGTH-1:0] partial2_out_sqr_w;
 
 wire [WORD_LENGTH-1:0] result_mult_w;
+wire [(WORD_LENGTH*2)-1:0] result32_mult_w;
 wire [WORD_LENGTH-1:0] result_div_w;
 wire [WORD_LENGTH-1:0] result_sqr_w;
 wire [WORD_LENGTH-1:0] result_out_w;
@@ -58,6 +60,7 @@ assign result = result_out_w;
 assign remainder = remainder_out_w;
 assign ready = ready_out_bit;
 assign sign = sign_out_bit;
+assign result32 = result32_mult_w;
 
 SquareRoot
 #(
@@ -118,7 +121,8 @@ mult
 	.partial2_out(partial2_out_mult_w),
 	.ready(ready_mult_bit),
 	.sign(sign_mult_bit),
-	.Result(result_mult_w)
+	.Result(result_mult_w),
+	.Result32(result32_mult_w)
 );
 
 

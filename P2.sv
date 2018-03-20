@@ -15,11 +15,13 @@ module P2
 	output loadX,
 	output loadY,
 	output ready,
+	output error,
 	output [WORD_LENGTH-1:0] result,
 	output [WORD_LENGTH-1:0] remainder,
 	output sign
 );
 
+bit error_bit;
 bit ready_bit;
 bit loadX_bit;
 bit loadY_bit;
@@ -32,6 +34,7 @@ wire [WORD_LENGTH-1:0] dataX_w;
 wire [WORD_LENGTH-1:0] dataY_w;
 wire [WORD_LENGTH-1:0] result_w;
 wire [WORD_LENGTH-1:0] remainder_w;
+wire [(WORD_LENGTH*2)-1:0] result32_w;
 
 assign loadX = loadX_bit;
 assign loadY = loadY_bit;
@@ -39,6 +42,7 @@ assign result = result_w;
 assign remainder = remainder_w;
 assign sign = sign_bit;
 assign ready = ready_bit;
+assign error = error_bit;
 
 LoadData
 #(
@@ -75,9 +79,24 @@ MDR_module
 	.flush(flush_bit),
 	.ready(ready_bit),
 	.result(result_w),
+	.result32(result32_w),
 	.remainder(remainder_w),
 	.sign(sign_bit)
 );
 
+Error
+#(
+	.WORD_LENGTH(WORD_LENGTH)
+) 
+error_module
+(
+	.clk(clk),
+	.reset(reset),
+	.Start(enable_bit),
+	.Opcode(op),
+	.Data32(result32_w),
+	.DataY(dataY_w),
+	.error(error_bit)
+);
 
 endmodule 

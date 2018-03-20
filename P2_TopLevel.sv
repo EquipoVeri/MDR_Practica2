@@ -27,6 +27,7 @@ module P2_TopLevel
 	output LoadY,
 	output Sign,
 	output Ready,
+	output Error,
 	
 	//output Error,
 	/* Result*/
@@ -47,6 +48,7 @@ assign Sign = ~Sign_b;
 assign LoadX = LoadX_b;
 assign LoadY = LoadY_b;
 assign Ready = Ready_b;
+assign Error = Error_b;
 
 P2
 #(
@@ -63,6 +65,7 @@ P2_module
 	.loadX(LoadX_b),
 	.loadY(LoadY_b),
 	.ready(Ready_b),
+	.error(Error_b),
 	.result(Result_w),
 	.remainder(Remainder_w),
 	.sign(Sign_b)

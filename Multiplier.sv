@@ -33,7 +33,8 @@ module Multiplier
 	output [WORD_LENGTH-1:0] partial2_out,
 	output ready,
 	output sign,
-	output [WORD_LENGTH-1 : 0] Result
+	output [WORD_LENGTH-1 : 0] Result,
+	output [(WORD_LENGTH*2)-1 : 0] Result32
 );
 
 bit flag0_bit;
@@ -213,5 +214,6 @@ Divisor
 assign ready = enable_bit;
 assign sign = sign_bit;
 assign Result = c2result_w[WORD_LENGTH-1:0];
+assign Result32 = c2result_w;
 
 endmodule

@@ -23,10 +23,10 @@ module Error
 	input clk,
 	input reset,
 	input Start,
-	input LoadData,
-	input Ready,
 	input [1:0] Opcode,
-	input [WORD_LENGTH-1:0] Data,
+	input [(WORD_LENGTH*2)-1:0] Data32,
+	input [WORD_LENGTH-1:0] DataY,
+
 
 	// Output Ports
 	output error
@@ -47,27 +47,25 @@ always_ff@(posedge clk or negedge reset) begin
 			case(Opcode)
 			
 				MULTIPLIER:
-					if(Ready == 1'b1)
-						if(Data > 32768)
-							state <= ERROR;
-						else
-							state <= MULTIPLIER;	
+					if(Data32 > 32768)
+						state <= ERROR;
+					else
+						state <= MULTIPLIER;	
 					
 				DIVISOR:
-					if(LoadData == 1'b1)
-						if(Data == 0)
-							state <= ERROR;
-						else
-							state <= DIVISOR;
+					if(DataY == 0)
+						state <= ERROR;
+					else
+						state <= DIVISOR;
 					
 				SQUARE_ROOT:
-					if(Data[WORD_LENGTH-1] == 1'b1)
+					if(DataY[WORD_LENGTH-1] == 1'b1)
 						state <= ERROR;
 					else
 						state <= SQUARE_ROOT;
 						
 				ERROR:	
-					if(Ready == 1'b0) 
+					if(Start == 1'b0) 
 						state <= ERROR;
 					else 
 						state <= state;
